@@ -4,7 +4,7 @@ This is a plugin for [Frosty Editor](https://github.com/CadeEvs/FrostyToolsuite/
 ## How it works
 With this plugin, Math Entities have 3 types of values: Variables, Property Inputs, and Instructions. Variables allow you to, within the MathEntity, get and set different types of values. Property Inputs create new Inputs you can add in the Property Connections, and Instructions are all of the math you can apply to the Variables and Inputs.
 
-![MathInstructionEntity](https://github.com/Ywingpilot2/FrostyMathEntityExtender/assets/136618828/fa2e0277-1e82-4e64-b336-22275af4e32b)
+![MathEntity](https://github.com/Ywingpilot2/FrostyMathEntityExtender/assets/136618828/992d317c-905e-4e41-9975-d8c1813dc457)
 
 ### Variables & Inputs
 Variables and Inputs are able to store different types of data. Variables are able to store Integers, Floats, and Booleans. Inputs are able to store Integers, Floats, Booleans, Vectors and Transforms. 
