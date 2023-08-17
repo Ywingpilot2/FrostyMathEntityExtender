@@ -4,15 +4,21 @@ This is a plugin for [Frosty Editor](https://github.com/CadeEvs/FrostyToolsuite/
 ## How it works
 With this plugin, Math Entities have 3 types of values: Variables, Property Inputs, and Instructions. Variables allow you to, within the MathEntity, get and set different types of values. Property Inputs create new Inputs you can add in the Property Connections, and Instructions are all of the math you can apply to the Variables and Inputs.
 
+![MathEntity](https://github.com/Ywingpilot2/FrostyMathEntityExtender/assets/136618828/48cd8bcb-90b4-4a8d-90fd-6cd947810573)
 ### Variables & Inputs
 Variables and Inputs are able to store different types of data. Variables are able to store Integers, Floats, and Booleans. Inputs are able to store Integers, Floats, Booleans, Vectors and Transforms. 
 
 Inputs get their values from the property connection of the same name, but can also be used by Instructions to store values. 
 
+![InputEntity](https://github.com/Ywingpilot2/FrostyMathEntityExtender/assets/136618828/fc2929fb-210d-4e67-8304-578d6a00b4ad)
+
 Variables start as static with default values, their values unlike Inputs are not affected by anything outside of the MathEntity. Like Inputs, Variables can also have their values modified by the Instructions.
 
+![VariableEntity](https://github.com/Ywingpilot2/FrostyMathEntityExtender/assets/136618828/a6586f6b-e397-4f36-b0aa-48e226a6d21f)
 ### Instructions
 Instructions are the heart of a MathEntity, as they contain the math needed to be done on the Variables and Inputs. Math Entities can do most things that Event and Property connections can do, except much faster and much cleaner.
+
+![MathInstructionEntity](https://github.com/Ywingpilot2/FrostyMathEntityExtender/assets/136618828/f8d31b21-74b0-43ea-8f95-c2374aaa1240)
 
 The top level of Instructions have 4 properties: Operation, Operation Type, Output To and Inputs;
 Operation is what math we are doing, so for example if we wanted to add 2 integers together, we would set the Operation to Add: Int Int. The names past the semicolon describe the inputs the Math requires. The last one will always be the output value.
