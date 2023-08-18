@@ -588,9 +588,9 @@ namespace MathExtender.TypeOverrides
             "normalv3: Function, I: Vec3 O: Vec3",
             "normalv4: Function, I: Vec4 O: Vec4",
             "translation: Function, I: Unknown, Vec3 O: Vec3",
-            "rotationx: Function, Unknown",
-            "rotationy: Function, Unknown",
-            "rotationz: Function, Unknown",
+            "rotationx: Function, I: Float O: Transform",
+            "rotationy: Function, I: Float O: Transform",
+            "rotationz: Function, I: Float O: Transform",
             "scale: Function, I: Vec3 O: Trans",
             "rotationAndTranslation: Function, I: Trans, Vec3 O: Trans",
             "lookAtTransform: Function, I: Vec3 O: Trans",
@@ -1222,100 +1222,107 @@ namespace MathExtender.TypeOverrides
 
                 //Different values can share the same ID, so e.g a bool and an int can both have id 0 without fucking with eachother, but 2 ints need to have id 0 and 1
                 //We need to grab different references depending on what type we are as a result
-                switch (mathEntity.OriginalType.SelectedName)
+                try
                 {
-                    #region --Ints--
-                    case "MathOpCode_AddI":
-                    case "MathOpCode_SubI":
-                    case "MathOpCode_MulI":
-                    case "MathOpCode_DivI":
-                    case "MathOpCode_ModI":
-                    case "MathOpCode_PowerI":
-                    case "MathOpCode_GreaterI":
-                    case "MathOpCode_GreaterEqI":
-                    case "MathOpCode_EqI":
-                    case "MathOpCode_LessI":
-                    case "MathOpCode_LessEqI":
-                    case "MathOpCode_NotEqI":
-                    case "MathOpCode_NegI":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + instructionObject.Param1.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Floats--
-                    case "MathOpCode_AddF":
-                    case "MathOpCode_SubF":
-                    case "MathOpCode_MulF":
-                    case "MathOpCode_DivF":
-                    case "MathOpCode_ModF":
-                    case "MathOpCode_PowerF":
-                    case "MathOpCode_GreaterF":
-                    case "MathOpCode_GreaterEqF":
-                    case "MathOpCode_EqF":
-                    case "MathOpCode_LessF":
-                    case "MathOpCode_LessEqF":
-                    case "MathOpCode_NotEqF":
-                    case "MathOpCode_NegF":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + instructionObject.Param1.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Bools--
-                    case "MathOpCode_OrB":
-                    case "MathOpCode_AndB":
-                    case "MathOpCode_NotB":
-                    case "MathOpCode_NotEqB":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + instructionObject.Param1.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Vec2--
-                    case "MathOpCode_AddV2":
-                    case "MathOpCode_SubV2":
-                    case "MathOpCode_MulV2F":
-                    case "MathOpCode_DivV2F":
-                    case "MathOpCode_NegV2":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + instructionObject.Param1.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Vec3--
-                    case "MathOpCode_AddV3":
-                    case "MathOpCode_SubV3":
-                    case "MathOpCode_MulV3F":
-                    case "MathOpCode_DivV3F":
-                    case "MathOpCode_NegV3":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + instructionObject.Param1.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Vec4--
-                    case "MathOpCode_AddV4":
-                    case "MathOpCode_SubV4":
-                    case "MathOpCode_MulV4F":
-                    case "MathOpCode_DivV4F":
-                    case "MathOpCode_NegV4":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("4_" + instructionObject.Param1.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
+                    switch (mathEntity.OriginalType.SelectedName)
+                    {
+                        #region --Ints--
+                        case "MathOpCode_AddI":
+                        case "MathOpCode_SubI":
+                        case "MathOpCode_MulI":
+                        case "MathOpCode_DivI":
+                        case "MathOpCode_ModI":
+                        case "MathOpCode_PowerI":
+                        case "MathOpCode_GreaterI":
+                        case "MathOpCode_GreaterEqI":
+                        case "MathOpCode_EqI":
+                        case "MathOpCode_LessI":
+                        case "MathOpCode_LessEqI":
+                        case "MathOpCode_NotEqI":
+                        case "MathOpCode_NegI":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
                         #endregion
+
+                        #region --Floats--
+                        case "MathOpCode_AddF":
+                        case "MathOpCode_SubF":
+                        case "MathOpCode_MulF":
+                        case "MathOpCode_DivF":
+                        case "MathOpCode_ModF":
+                        case "MathOpCode_PowerF":
+                        case "MathOpCode_GreaterF":
+                        case "MathOpCode_GreaterEqF":
+                        case "MathOpCode_EqF":
+                        case "MathOpCode_LessF":
+                        case "MathOpCode_LessEqF":
+                        case "MathOpCode_NotEqF":
+                        case "MathOpCode_NegF":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                        #endregion
+
+                        #region --Bools--
+                        case "MathOpCode_OrB":
+                        case "MathOpCode_AndB":
+                        case "MathOpCode_NotB":
+                        case "MathOpCode_NotEqB":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                        #endregion
+
+                        #region --Vec2--
+                        case "MathOpCode_AddV2":
+                        case "MathOpCode_SubV2":
+                        case "MathOpCode_MulV2F":
+                        case "MathOpCode_DivV2F":
+                        case "MathOpCode_NegV2":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                        #endregion
+
+                        #region --Vec3--
+                        case "MathOpCode_AddV3":
+                        case "MathOpCode_SubV3":
+                        case "MathOpCode_MulV3F":
+                        case "MathOpCode_DivV3F":
+                        case "MathOpCode_NegV3":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                        #endregion
+
+                        #region --Vec4--
+                        case "MathOpCode_AddV4":
+                        case "MathOpCode_SubV4":
+                        case "MathOpCode_MulV4F":
+                        case "MathOpCode_DivV4F":
+                        case "MathOpCode_NegV4":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("4_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                            #endregion
+                    }
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    App.Logger.LogError("Failed to Decompile input for Instruction {0} due to the reference being invalid.", MathInstructions.Count);
                 }
 
                 mathEntity.FunctionInputs.Add(functionInput);
@@ -1328,92 +1335,99 @@ namespace MathExtender.TypeOverrides
                     };
                     //Different values can share the same ID, so e.g a bool and an int can both have id 0 without fucking with eachother, but 2 ints need to have id 0 and 1
                     //We need to grab different references depending on what type we are as a result
-                    switch (mathEntity.OriginalType.SelectedName)
+                    try
                     {
-                        #region --Ints--
-                        case "MathOpCode_AddI":
-                        case "MathOpCode_SubI":
-                        case "MathOpCode_MulI":
-                        case "MathOpCode_DivI":
-                        case "MathOpCode_ModI":
-                        case "MathOpCode_GreaterI":
-                        case "MathOpCode_GreaterEqI":
-                        case "MathOpCode_EqI":
-                        case "MathOpCode_LessI":
-                        case "MathOpCode_LessEqI":
-                        case "MathOpCode_NotEqI":
-                            {
-                                functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + instructionObject.Param2.ToString());
-                                functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
-
-                        #region --Floats--
-                        case "MathOpCode_AddF":
-                        case "MathOpCode_SubF":
-                        case "MathOpCode_MulF":
-                        case "MathOpCode_DivF":
-                        case "MathOpCode_ModF":
-                        case "MathOpCode_GreaterF":
-                        case "MathOpCode_GreaterEqF":
-                        case "MathOpCode_EqF":
-                        case "MathOpCode_LessF":
-                        case "MathOpCode_LessEqF":
-                        case "MathOpCode_NotEqF":
-                            {
-                                functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + instructionObject.Param2.ToString());
-                                functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
-
-                        #region --Bools--
-                        case "MathOpCode_OrB":
-                        case "MathOpCode_AndB":
-                        case "MathOpCode_NotEqB":
-                            {
-                                functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + instructionObject.Param2.ToString());
-                                functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
-
-                        #region --Vec2--
-                        case "MathOpCode_AddV2":
-                        case "MathOpCode_SubV2":
-                        case "MathOpCode_MulV2F":
-                        case "MathOpCode_DivV2F":
-                            {
-                                functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + instructionObject.Param2.ToString()); ;
-                                functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
-
-                        #region --Vec3--
-                        case "MathOpCode_AddV3":
-                        case "MathOpCode_SubV3":
-                        case "MathOpCode_MulV3F":
-                        case "MathOpCode_DivV3F":
-                            {
-                                functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + instructionObject.Param2.ToString());
-                                functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
-
-                        #region --Vec4--
-                        case "MathOpCode_AddV4":
-                        case "MathOpCode_SubV4":
-                        case "MathOpCode_MulV4F":
-                        case "MathOpCode_DivV4F":
-                            {
-                                functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("4_" + instructionObject.Param2.ToString()); ;
-                                functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
-                                break;
-                            }
+                        switch (mathEntity.OriginalType.SelectedName)
+                        {
+                            #region --Ints--
+                            case "MathOpCode_AddI":
+                            case "MathOpCode_SubI":
+                            case "MathOpCode_MulI":
+                            case "MathOpCode_DivI":
+                            case "MathOpCode_ModI":
+                            case "MathOpCode_GreaterI":
+                            case "MathOpCode_GreaterEqI":
+                            case "MathOpCode_EqI":
+                            case "MathOpCode_LessI":
+                            case "MathOpCode_LessEqI":
+                            case "MathOpCode_NotEqI":
+                                {
+                                    functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + instructionObject.Param2.ToString());
+                                    functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
+                                    break;
+                                }
                             #endregion
+
+                            #region --Floats--
+                            case "MathOpCode_AddF":
+                            case "MathOpCode_SubF":
+                            case "MathOpCode_MulF":
+                            case "MathOpCode_DivF":
+                            case "MathOpCode_ModF":
+                            case "MathOpCode_GreaterF":
+                            case "MathOpCode_GreaterEqF":
+                            case "MathOpCode_EqF":
+                            case "MathOpCode_LessF":
+                            case "MathOpCode_LessEqF":
+                            case "MathOpCode_NotEqF":
+                                {
+                                    functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + instructionObject.Param2.ToString());
+                                    functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
+
+                            #region --Bools--
+                            case "MathOpCode_OrB":
+                            case "MathOpCode_AndB":
+                            case "MathOpCode_NotEqB":
+                                {
+                                    functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + instructionObject.Param2.ToString());
+                                    functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
+
+                            #region --Vec2--
+                            case "MathOpCode_AddV2":
+                            case "MathOpCode_SubV2":
+                            case "MathOpCode_MulV2F":
+                            case "MathOpCode_DivV2F":
+                                {
+                                    functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + instructionObject.Param2.ToString()); ;
+                                    functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
+
+                            #region --Vec3--
+                            case "MathOpCode_AddV3":
+                            case "MathOpCode_SubV3":
+                            case "MathOpCode_MulV3F":
+                            case "MathOpCode_DivV3F":
+                                {
+                                    functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + instructionObject.Param2.ToString());
+                                    functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
+
+                            #region --Vec4--
+                            case "MathOpCode_AddV4":
+                            case "MathOpCode_SubV4":
+                            case "MathOpCode_MulV4F":
+                            case "MathOpCode_DivV4F":
+                                {
+                                    functionInputTwo.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("4_" + instructionObject.Param2.ToString()); ;
+                                    functionInputTwo.ReferencedValue = functionInputTwo.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                                #endregion
+                        }
+                    }
+                    catch (IndexOutOfRangeException ex)
+                    {
+                        App.Logger.LogError("Failed to Decompile input for Instruction {0} due to the reference being invalid.", MathInstructions.Count);
                     }
 
                     //Add them to the params
@@ -1437,43 +1451,51 @@ namespace MathExtender.TypeOverrides
                 {
                     FunctionInput = new CustomComboData<string, string>(MathVariableIds, MathVariables)
                 };
-                switch (mathEntity.OriginalType.SelectedName)
+
+                try
                 {
-                    #region --Vec2--
-                    case "MathOpCode_FieldV2":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + instructionObject.Param2.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Vec3--
-                    case "MathOpCode_FieldV3":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + instructionObject.Param2.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Vec4--
-                    case "MathOpCode_FieldV4":
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("4_" + instructionObject.Param2.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
-                    #endregion
-
-                    #region --Transforms--
-                    case "MathOpCode_FieldT": //Transform
-                        {
-                            functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("T_" + instructionObject.Param2.ToString());
-                            functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                            break;
-                        }
+                    switch (mathEntity.OriginalType.SelectedName)
+                    {
+                        #region --Vec2--
+                        case "MathOpCode_FieldV2":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
                         #endregion
+
+                        #region --Vec3--
+                        case "MathOpCode_FieldV3":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                        #endregion
+
+                        #region --Vec4--
+                        case "MathOpCode_FieldV4":
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("4_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                        #endregion
+
+                        #region --Transforms--
+                        case "MathOpCode_FieldT": //Transform
+                            {
+                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("T_" + instructionObject.Param1.ToString());
+                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                break;
+                            }
+                            #endregion
+                    }
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    App.Logger.LogError("Failed to Decompile input 0 for Instruction {0} due to the reference being invalid.", MathInstructions.Count);
                 }
 
                 //Add them to the params
@@ -1504,294 +1526,306 @@ namespace MathExtender.TypeOverrides
                         FunctionInput = new CustomComboData<string, string>(MathVariableIds, MathVariables)
                     };
 
-                    switch (Utils.GetString(instructionObject.Param1))
+                    try
                     {
-                        #region --Ints--
-                        case "mini":
-                        case "maxi":
-                        case "sqrti":
-                        case "clampi":
-                        case "absi":
-                        case "signi":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "intf":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "intb":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "ifi":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                        switch (Utils.GetString(instructionObject.Param1))
+                        {
+                            #region --Ints--
+                            case "mini":
+                            case "maxi":
+                            case "sqrti":
+                            case "clampi":
+                            case "absi":
+                            case "signi":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
-                                {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
-                                }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
 
-                        #region --Floats--
-                        case "minf":
-                        case "maxf":
-                        case "cos":
-                        case "sin":
-                        case "tan":
-                        case "acos":
-                        case "asin":
-                        case "atan":
-                        case "atan2":
-                        case "sqrtf":
-                        case "lerpf":
-                        case "clampf":
-                        case "round":
-                        case "ceil":
-                        case "absf":
-                        case "floor":
-                        case "signf":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "floati":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "floatb":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "iff":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                            case "intf":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
+
+                            case "intb":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
 
-                        #region --Bools--
-                        case "ifb":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
-
-                        #region --Vec2--
-                        case "vec2":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "normalv2":
-                        case "dotv2":
-                        case "distancev2":
-                        case "normv2":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "lerpv2":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 2)
+                            case "ifi":
                                 {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
+                            #endregion
+
+                            #region --Floats--
+                            case "minf":
+                            case "maxf":
+                            case "cos":
+                            case "sin":
+                            case "tan":
+                            case "acos":
+                            case "asin":
+                            case "atan":
+                            case "atan2":
+                            case "sqrtf":
+                            case "lerpf":
+                            case "clampf":
+                            case "round":
+                            case "ceil":
+                            case "absf":
+                            case "floor":
+                            case "signf":
+                            case "rotationx":
+                            case "rotationy":
+                            case "rotationz":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
 
-                        case "ifv2":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                            case "floati":
                                 {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("I_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
+
+                            case "floatb":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
 
-                        #region --Vec3--
-                        case "vec3":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
+                            case "iff":
+                                {
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
 
-                        case "normalv3":
-                        case "cross":
-                        case "translation":
-                        case "dotv3":
-                        case "scale":
-                        case "distancev3":
-                        case "normv3":
-                        case "lookAtTransform":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
+                            #region --Bools--
+                            case "ifb":
+                                {
+                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
 
-                        case "lerpv3":
-                        case "slerp":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 2)
+                            #region --Vec2--
+                            case "vec2":
+                                {
+                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+
+                            case "normalv2":
+                            case "dotv2":
+                            case "distancev2":
+                            case "normv2":
+                                {
+                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+
+                            case "lerpv2":
+                                {
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 2)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+
+                            case "ifv2":
+                                {
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
+
+                            #region --Vec3--
+                            case "vec3":
+                                {
+                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+
+                            case "normalv3":
+                            case "cross":
+                            case "translation":
+                            case "dotv3":
+                            case "scale":
+                            case "distancev3":
+                            case "normv3":
+                            case "lookAtTransform":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
+
+                            case "lerpv3":
+                            case "slerp":
+                                {
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 2)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("3_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+
+                            case "ifv3":
+                                {
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
+
+                            #region --Vec4--
+                            case "vec4":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
 
-                        case "ifv3":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                            case "normalv4":
+                            case "dotv4":
+                            case "distancev4":
+                            case "normv4":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
+
+                            case "lerpv4":
                                 {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 2)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
 
-                        #region --Vec4--
-                        case "vec4":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "normalv4":
-                        case "dotv4":
-                        case "distancev4":
-                        case "normv4":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "lerpv4":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 2)
+                            case "ifv4":
                                 {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
-                                {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("F_" + param.ToString());
-                                }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
+                            #endregion
 
-                        case "ifv4":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
-                                {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("2_" + param.ToString());
-                                }
-                                else
-                                {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
-                                }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
-
-                        #region --Transform--
-                        case "asLocalSpaceTransform": //Implicit declaration
-                        case "asWorldSpaceTransform":
-                        case "inverse":
-                        case "fullInverse":
-                        case "isWorldSpaceTransform":
-                            {
-                                functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("T_" + param.ToString());
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-
-                        case "ift":
-                            {
-                                if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                            #region --Transform--
+                            case "asLocalSpaceTransform": //Implicit declaration
+                            case "asWorldSpaceTransform":
+                            case "inverse":
+                            case "fullInverse":
+                            case "isWorldSpaceTransform":
+                            case "rotationAndTranslation":
                                 {
                                     functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("T_" + param.ToString());
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
                                 }
-                                else
-                                {
-                                    functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
-                                }
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
-                        #endregion
 
-                        default: //Anything that isn't above is unknown(or I forgor)
-                            {
-                                functionInput.FunctionInput.SelectedIndex = (int)param;
-                                functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
-                                break;
-                            }
+                            case "ift":
+                                {
+                                    if (functionCalls[instructionObject.Param2].Parameters.IndexOf(param) != 0)
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("T_" + param.ToString());
+                                    }
+                                    else
+                                    {
+                                        functionInput.FunctionInput.SelectedIndex = MathVariableIds.LastIndexOf("B_" + param.ToString());
+                                    }
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                            #endregion
+
+                            default: //Anything that isn't above is unknown(or I forgor)
+                                {
+                                    functionInput.FunctionInput.SelectedIndex = (int)param;
+                                    functionInput.ReferencedValue = functionInput.FunctionInput.SelectedValue;
+                                    break;
+                                }
+                        }
+                        
+                        mathEntity.FunctionInputs.Add(functionInput);
                     }
 
-                    mathEntity.FunctionInputs.Add(functionInput);
+                    catch (IndexOutOfRangeException ex)
+                    {
+                        App.Logger.LogError("Failed to Decompile input {0} for Instruction {1} due to the reference being invalid.", functionCalls.IndexOf(param), MathInstructions.Count);
+                    }
                 }
             }
 
@@ -2251,6 +2285,10 @@ namespace MathExtender.TypeOverrides
                             case "inverse":
                             case "fullInverse":
                             case "scale":
+                            case "rotationAndTranslation":
+                            case "rotationx":
+                            case "rotationy":
+                            case "rotationz":
                                 {
                                     int idx = MathVariableIds.LastIndexOf("T_" + instructionObject.Result.ToString());
                                     if (idx == -1) //If its -1 that means the input doesn't exist, so we are declaring a reference
@@ -2693,6 +2731,9 @@ namespace MathExtender.TypeOverrides
                         case "inverse":
                         case "fullInverse":
                         case "scale":
+                        case "rotationx":
+                        case "rotationy":
+                        case "rotationz":
                             {
                                 return "Var trans " + MathVariables.Count.ToString();
                             }
