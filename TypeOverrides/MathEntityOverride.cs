@@ -1320,7 +1320,7 @@ namespace MathExtender.TypeOverrides
                             #endregion
                     }
                 }
-                catch (IndexOutOfRangeException ex)
+                catch
                 {
                     App.Logger.LogError("Failed to Decompile input for Instruction {0} due to the reference being invalid.", MathInstructions.Count);
                 }
@@ -1425,7 +1425,7 @@ namespace MathExtender.TypeOverrides
                                 #endregion
                         }
                     }
-                    catch (IndexOutOfRangeException ex)
+                    catch
                     {
                         App.Logger.LogError("Failed to Decompile input for Instruction {0} due to the reference being invalid.", MathInstructions.Count);
                     }
@@ -1493,7 +1493,7 @@ namespace MathExtender.TypeOverrides
                             #endregion
                     }
                 }
-                catch (IndexOutOfRangeException ex)
+                catch
                 {
                     App.Logger.LogError("Failed to Decompile input 0 for Instruction {0} due to the reference being invalid.", MathInstructions.Count);
                 }
@@ -1822,7 +1822,7 @@ namespace MathExtender.TypeOverrides
                         mathEntity.FunctionInputs.Add(functionInput);
                     }
 
-                    catch (IndexOutOfRangeException ex)
+                    catch
                     {
                         App.Logger.LogError("Failed to Decompile input {0} for Instruction {1} due to the reference being invalid.", functionCalls.IndexOf(param), MathInstructions.Count);
                     }
@@ -1882,7 +1882,6 @@ namespace MathExtender.TypeOverrides
                 case "MathOpCode_FieldV2":
                 case "MathOpCode_FieldV3":
                 case "MathOpCode_FieldV4":
-                case "MathOpCode_FieldT":
                     {
                         int idx = MathVariableIds.LastIndexOf("F_" + instructionObject.Result.ToString());
                         if (idx == -1) //If its -1 that means the variable doesn't exist, lets assume its referencing itself
@@ -2016,6 +2015,51 @@ namespace MathExtender.TypeOverrides
                         }
                         mathEntity.Identifier = DeclareVariableName(mathEntity, true, instructionObject.Result);
                         mathEntity.ReferencedValue = mathEntity.OutputTo.SelectedValue;
+                        break;
+                    }
+                #endregion
+
+                #region --Transform
+                case "MathOpCode_FieldT":
+                    {
+                        if (!mathEntity.FunctionTypes.SelectedName.StartsWith("Split transform"))
+                        {
+                            int idx = MathVariableIds.LastIndexOf("F_" + instructionObject.Result.ToString());
+                            if (idx == -1) //If its -1 that means the variable doesn't exist, lets assume its referencing itself
+                            {
+                                VariableEntity variable = new VariableEntity()
+                                {
+                                    OriginalType = new CustomComboData<string, string>(MathOpVariableTypes, MathOpVariableTypes) { SelectedIndex = 2 },
+                                    VariableTypes = new CustomComboData<string, string>(MathVariableTypes, MathVariableTypes) { SelectedIndex = 2 }
+                                };
+                                VariableEntities.Add(variable);
+                                MathVariables.Add(DeclareVariableName(variable));
+                                MathVariableIds.Add(DeclareVariableName(variable, true, instructionObject.Result));
+                                referencesInOrder.Add(DeclareVariableName(variable, true, instructionObject.Result));
+                                mathEntity.OutputTo.SelectedIndex = MathVariableIds.IndexOf(DeclareVariableName(variable, true, instructionObject.Result));
+                            }
+                            else
+                            {
+                                mathEntity.OutputTo.SelectedIndex = MathVariableIds.IndexOf(MathVariableIds[idx]);
+                            }
+                            mathEntity.ReferencedValue = mathEntity.OutputTo.SelectedValue;
+                        }
+                        else
+                        {
+                            int idx = MathVariableIds.LastIndexOf("3_" + instructionObject.Result.ToString());
+                            if (idx == -1) //If its -1 that means the input doesn't exist, so we are declaring a reference
+                            {
+                                MathVariables.Add(DeclareVariableName(mathEntity));
+                                MathVariableIds.Add(DeclareVariableName(mathEntity, true, instructionObject.Result));
+                                mathEntity.OutputTo.SelectedIndex = MathVariableIds.IndexOf(DeclareVariableName(mathEntity, true, instructionObject.Result));
+                            }
+                            else
+                            {
+                                mathEntity.OutputTo.SelectedIndex = MathVariableIds.IndexOf(MathVariableIds[idx]);
+                            }
+                            mathEntity.ReferencedValue = mathEntity.OutputTo.SelectedValue;
+                            mathEntity.Identifier = DeclareVariableName(mathEntity, true, instructionObject.Result);
+                        }
                         break;
                     }
                 #endregion
@@ -2740,7 +2784,7 @@ namespace MathExtender.TypeOverrides
 
                         default:
                             {
-                                return "Var invalid" + MathVariables.Count.ToString();
+                                return "Var " + MathVariables.Count.ToString();
                             }
                     }
                 }
