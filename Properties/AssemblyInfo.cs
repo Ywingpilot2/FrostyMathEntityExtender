@@ -24,6 +24,6 @@ using System.Windows;
 
 [assembly: PluginDisplayName("Math entity Extender")]
 [assembly: PluginAuthor("CosmicDreams, Y wingpilot2 and Natalie")]
-[assembly: PluginVersion("0.1.8.0")]
+[assembly: PluginVersion("0.1.8.2")]
 
 [assembly: RegisterTypeOverride("MathEntityData", typeof(MathEntityDataOverride))]
